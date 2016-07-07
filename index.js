@@ -7,14 +7,6 @@ let request = require('request');
 let mongoose = require('mongoose');
 let async = require('async');
 
-let Song = mongoose.model('Song', new mongoose.Schema({
-  title: String,
-  artist: String,
-  year: Number,
-  points: Number,
-  first: Date,
-}));
-
 mongoose.connect('mongodb://localhost:27017/musicelo');
 
 program
@@ -34,6 +26,14 @@ let month = leftPad(date.getMonth() + 1, 2);
 let day = leftPad(date.getDate(), 2);
 let uri = `http://www.billboard.com/charts/country-songs/${year}-${month}-${day}`;
 
+let Song = mongoose.model('Song', new mongoose.Schema({
+  title: String,
+  artist: String,
+  year: { type: Number, default: year },
+  points: { type: Number, default: 1500 },
+  first: { type: Date, default: date },
+}));
+
 console.log(uri);
 request(uri, (e, r, b) => {
   let $ = cheerio.load(b);
@@ -47,9 +47,6 @@ request(uri, (e, r, b) => {
     Song.findOneAndUpdate(query, {
       title: title,
       artist: artist,
-      year: year,
-      points: 1500,
-      first: date,
     }, { upsert: true }, cb);
   }, (err) => {
     if(err) {
