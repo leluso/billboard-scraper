@@ -10,10 +10,10 @@ let async = require('async');
 mongoose.connect('mongodb://localhost:27017/musicelo');
 
 program
-  .version('1.0.0')  
+  .version('1.0.0')
   .option('-d, --date [date]', 'Specify a date. Defaults to latest')
   .parse(process.argv);
-  
+
 let date = new Date(); // default to today
 if(program.date) {
   date = new Date(program.date);
@@ -47,7 +47,7 @@ request(uri, (e, r, b) => {
     Song.findOneAndUpdate(query, {
       title: title,
       artist: artist,
-    }, { upsert: true }, cb);
+    }, { upsert: true, setDefaultsOnInsert: true }, cb);
   }, (err) => {
     if(err) {
       console.error(err);
@@ -60,10 +60,10 @@ request(uri, (e, r, b) => {
 });
 
 function getSaturday( date ) {
-  let day = date.getDay() || 7;  
-  if( day !== 6 ) 
-    date.setHours(-24 * (day - 6)); 
-  
+  let day = date.getDay() || 7;
+  if( day !== 6 )
+    date.setHours(-24 * (day - 6));
+
   date.setDate(date.getDate() + 7);
   return date;
 }
