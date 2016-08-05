@@ -24,7 +24,7 @@ date = getSaturday(date);
 let year = date.getFullYear();
 let month = leftPad(date.getMonth() + 1, 2);
 let day = leftPad(date.getDate(), 2);
-let uri = `http://www.billboard.com/charts/country-songs/${year}-${month}-${day}`;
+let uri = `http://www.billboard.com/charts/country-airplay/${year}-${month}-${day}`;
 
 let Song = mongoose.model('Song', new mongoose.Schema({
   title: String,
@@ -32,6 +32,8 @@ let Song = mongoose.model('Song', new mongoose.Schema({
   year: { type: Number, default: year },
   points: { type: Number, default: 1500 },
   first: { type: Date, default: date },
+  wins: { type: Number, default: 0 },
+  losses: { type: Number, default: 0 },
 }));
 
 console.log(uri);
